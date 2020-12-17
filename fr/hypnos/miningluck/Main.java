@@ -14,15 +14,16 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        configManager.setup();
-        configManager.saveConfig();
 
-        getCommand("luck").setExecutor(new CommandsManager(this));
-        getCommand("luck").setTabCompleter(new CommandsManager(this));
+        getCommand("miningluck").setExecutor(new CommandsManager(this));
+        getCommand("miningluck").setTabCompleter(new CommandsManager(this));
 
         getServer().getPluginManager().registerEvents(new ClickEvent(), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(playerManager), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(this), this);
+
+        configManager.loadConfig();
+        configManager.loadingSuccess(getServer().getPluginManager().isPluginEnabled(this));
     }
 
 

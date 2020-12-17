@@ -4,5 +4,6 @@ main: fr.hypnos.miningluck.Main
 author: Hypnos
 api-version: 1.16
 commands:
-  luck:
+  miningluck:
     description: Plugin main command
+    aliases: [ml]

@@ -1,36 +1,33 @@
 package fr.hypnos.miningluck.utils;
 
-import fr.hypnos.miningluck.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.PluginDescriptionFile;
 
-import java.io.File;
-import java.io.IOException;
+import fr.hypnos.miningluck.Main;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigManager {
 
-    private File file;
-    private FileConfiguration customFile;
     private Main main;
 
     public ConfigManager(Main main) {
         this.main = main;
     }
 
-    public void setup() {
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("MiningLuck").getDataFolder(), "custom.yml");
+    public void loadConfig(){
 
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        customFile = YamlConfiguration.loadConfiguration(file);
-        customFile.options().header("\n" +
+        FileConfiguration cfg = main.getConfig();
+        List<String> defaultBlocks = new ArrayList<>();
+        defaultBlocks.add("DIAMOND_ORE");
+
+        // Ajout des valeures initiales
+        cfg.addDefault("listened-blocks", defaultBlocks);
+        cfg.options().copyDefaults(true);
+
+        // Mise en place du header
+        cfg.options().header("\n" +
                 "        _       _               __            _    \n" +
                 "  /\\/\\ (_)_ __ (_)_ __   __ _  / / _   _  ___| | __\n" +
                 " /    \\| | '_ \\| | '_ \\ / _` |/ / | | | |/ __| |/ /\n" +
@@ -40,13 +37,21 @@ public class ConfigManager {
                 "\n" +
                 "Current version: " + main.getDescription().getVersion() + "\n"
         );
+        cfg.options().copyHeader(true);
+
+        // Sauvegarde de la config
+        main.saveConfig();
     }
 
-    public void saveConfig() {
-        try {
-            customFile.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void loadingSuccess(Boolean pluginStatus) {
+        if (pluginStatus){
+            System.out.println(
+                    "\n" +
+                            ChatColor.AQUA + "_  _ " + ChatColor.DARK_AQUA + "_    \n" +
+                            ChatColor.AQUA + "|\\/| " + ChatColor.DARK_AQUA + "|      " + ChatColor.AQUA + "MiningLuck Enabled\n" +
+                            ChatColor.AQUA + "|  | " + ChatColor.DARK_AQUA + "|___   " + ChatColor.DARK_GRAY + "Version " + main.getDescription().getVersion() + "\n" +
+                            "          \n"
+            );
         }
     }
 
