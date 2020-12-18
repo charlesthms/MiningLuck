@@ -30,27 +30,51 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (sender instanceof Player) {
+        if (sender instanceof Player && args.length > 0) {
+
             Player player = (Player) sender;
+            FileConfiguration cfg = mainInstance.getConfig();
 
             if (args[0].equalsIgnoreCase("gui") && args.length == 1) {
                 guiManager.createGUI(player);
-            } else if (args[0].equalsIgnoreCase("addBlock") && args.length == 2) {
+            } else if (args[0].equalsIgnoreCase("listen") && args.length == 2) {
 
                 if (Material.getMaterial(args[1].toUpperCase()) != null) {
-                    FileConfiguration cfg = mainInstance.getConfig();
                     List<String> updated = cfg.getStringList("listened-blocks");
 
-                    updated.add(args[1].toUpperCase());
+                    if (updated.contains(args[1].toUpperCase())) {
+                        sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.GOLD + "] " + ChatColor.DARK_RED + "Erreur: " + args[1].toUpperCase() + " est déjà un block écouté.");
+                    } else {
+                        updated.add(args[1].toUpperCase());
+                        cfg.set("listened-blocks", updated);
+                        mainInstance.saveConfig();
 
-                    cfg.set("listened-blocks", updated);
-                    mainInstance.saveConfig();
+                        sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.GOLD + "] " + ChatColor.GREEN + args[1].toUpperCase() + " ajouté aux blocks écoutés");
+                    }
+
                 } else {
-                    sender.sendMessage(ChatColor.AQUA + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.AQUA + "] " + ChatColor.AQUA + "Erreur: " + args[1].toUpperCase() + " n'existe pas.");
+                    sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.GOLD + "] " + ChatColor.DARK_RED + "Erreur: " + args[1].toUpperCase() + " n'existe pas.");
                 }
 
-            }
+            } else if (args[0].equalsIgnoreCase("unlisten")) {
+                List<String> updated = cfg.getStringList("listened-blocks");
 
+                if (!updated.contains(args[1].toUpperCase())) {
+                    sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.GOLD + "] " + ChatColor.DARK_RED + "Erreur: " + args[1].toUpperCase() + " n'est déjà pas un block écouté.");
+                } else {
+                    updated.remove(args[1].toUpperCase());
+                    cfg.set("listened-blocks", updated);
+                    mainInstance.saveConfig();
+
+                    sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.GOLD + "] " + ChatColor.GREEN + args[1].toUpperCase() + " retiré des blocks écoutés");
+                }
+            } else if (args[0].equalsIgnoreCase("list")){
+                List<String> list = cfg.getStringList("listened-blocks");
+
+                for (String value : list){
+                    sender.sendMessage(value);
+                }
+            }
         }
         return false;
     }
@@ -62,10 +86,16 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
 
         if (args.length == 1) {
             subArgs.add("gui");
-            subArgs.add("addBlock");
+            subArgs.add("listen");
+            subArgs.add("unlisten");
+            subArgs.add("list");
         }
-        if (args.length == 2){
-            subArgs.addAll(Arrays.stream(Material.values()).map(m->m.name().toLowerCase()).collect(Collectors.toList()));
+        if (args.length == 2) {
+            subArgs.addAll(Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).collect(Collectors.toList()));
+        }
+        if (args[0].equalsIgnoreCase("unlisten")){
+            FileConfiguration cfg = mainInstance.getConfig();
+            return cfg.getStringList("listened-blocks");
         }
 
         return subArgs;
