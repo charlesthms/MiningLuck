@@ -24,6 +24,7 @@ public class Main extends JavaPlugin {
 
         configManager.loadConfig();
         configManager.loadingSuccess(getServer().getPluginManager().isPluginEnabled(this));
+        configManager.create();
     }
 
 

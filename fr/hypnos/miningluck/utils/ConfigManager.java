@@ -2,13 +2,20 @@ package fr.hypnos.miningluck.utils;
 
 
 import fr.hypnos.miningluck.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigManager {
+
+    private static FileConfiguration customFile;
+    private static File file;
 
     private Main main;
 
@@ -16,6 +23,44 @@ public class ConfigManager {
         this.main = main;
     }
 
+    // Custom config
+    public void create()
+    {
+        File folder = new File(main.getDataFolder(),"Local");
+
+        if (!folder.exists()){
+            folder.mkdir();
+        }
+
+        file = new File(String.valueOf(main.getDataFolder().toPath().resolve("Local")), "data.yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        customFile = YamlConfiguration.loadConfiguration(file);
+    }
+
+    public static FileConfiguration get(){
+        return customFile;
+    }
+
+    public static void save(){
+        try {
+            customFile.save(file);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void reload() {
+        customFile = YamlConfiguration.loadConfiguration(file);
+    }
+
+    // Regular config
     public void loadConfig(){
 
         FileConfiguration cfg = main.getConfig();

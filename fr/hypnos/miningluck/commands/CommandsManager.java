@@ -66,14 +66,21 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
                     cfg.set("listened-blocks", updated);
                     mainInstance.saveConfig();
 
+                    FileConfiguration data = ConfigManager.get();
+                    ConfigManager.get().set("Players." + player.getUniqueId().toString() + "." + args[1].toUpperCase(), null);
+                    ConfigManager.save();
+
                     sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.DARK_GRAY + "MiningLuck" + ChatColor.GOLD + "] " + ChatColor.GREEN + args[1].toUpperCase() + " retiré des blocks écoutés");
                 }
-            } else if (args[0].equalsIgnoreCase("list")){
+            } else if (args[0].equalsIgnoreCase("list")) {
                 List<String> list = cfg.getStringList("listened-blocks");
 
-                for (String value : list){
+                for (String value : list) {
                     sender.sendMessage(value);
                 }
+            } else if (args[0].equalsIgnoreCase("resetPlayerData")){
+                ConfigManager.get().set("Players", null);
+                ConfigManager.save();
             }
         }
         return false;
@@ -89,11 +96,12 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
             subArgs.add("listen");
             subArgs.add("unlisten");
             subArgs.add("list");
+            subArgs.add("resetPlayerData");
         }
         if (args.length == 2) {
             subArgs.addAll(Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).collect(Collectors.toList()));
         }
-        if (args[0].equalsIgnoreCase("unlisten")){
+        if (args[0].equalsIgnoreCase("unlisten")) {
             FileConfiguration cfg = mainInstance.getConfig();
             return cfg.getStringList("listened-blocks");
         }
