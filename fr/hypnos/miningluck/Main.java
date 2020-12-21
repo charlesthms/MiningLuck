@@ -24,9 +24,9 @@ public class Main extends JavaPlugin {
         getCommand("miningluck").setTabCompleter(new CommandsManager(this));
 
         getServer().getPluginManager().registerEvents(new ClickEvent(), this);
-        getServer().getPluginManager().registerEvents(new BlockBreak(playerManager), this);
+        getServer().getPluginManager().registerEvents(new BlockBreak(playerManager, this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(this), this);
-        getServer().getPluginManager().registerEvents(new FreezeEvent(), this);
+        getServer().getPluginManager().registerEvents(new FreezeEvent(this), this);
 
         playerLogs.logsInit();
 

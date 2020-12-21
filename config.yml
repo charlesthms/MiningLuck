@@ -1,5 +1,6 @@
-
 freeze-settings:
   allow-block-break: false
+  allow-block-place: false
   allow-damage: false
   allow-command: false
+  allow-pvp: false

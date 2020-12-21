@@ -99,6 +99,8 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
                         Freeze.getFrozenPlayers().remove(target.getUniqueId());
                     }
                 }
+            } else if (args[0].equalsIgnoreCase("reload") && args.length==1){
+                mainInstance.reloadConfig();
             }
         }
         return false;
@@ -117,6 +119,7 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
             subArgs.add("resetPlayerData");
             subArgs.add("freeze");
             subArgs.add("unfreeze");
+            subArgs.add("reload");
         }
         if (args.length == 2) {
             subArgs.addAll(Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).collect(Collectors.toList()));
