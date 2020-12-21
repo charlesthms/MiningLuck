@@ -1,8 +1,7 @@
 package fr.hypnos.miningluck.utils;
 
+
 import fr.hypnos.miningluck.Main;
-import fr.hypnos.miningluck.PlayerManager;
-import fr.hypnos.miningluck.events.BlockBreak;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,8 +13,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class GUIManager {
 

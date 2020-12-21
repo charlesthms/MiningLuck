@@ -1,14 +1,16 @@
-package fr.hypnos.miningluck;
+package fr.hypnos.miningluck.utils;
 
 
-import fr.hypnos.miningluck.utils.ConfigManager;
+import fr.hypnos.miningluck.Main;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class PlayerManager {
 
@@ -67,17 +69,18 @@ public class PlayerManager {
     }
 
     public void onQuitManager(Player p) {
-        FileConfiguration cfg = mainInstance.getConfig();
         FileConfiguration data = ConfigManager.get();
+        FileConfiguration logs = PlayerLogs.getLogsConfig();
+        FileConfiguration cfg = mainInstance.getConfig();
+
         List<String> listenedBlocks = new ArrayList<>();
 
         for (String listened : cfg.getStringList("listened-blocks")) {
                 listenedBlocks.add(listened.toLowerCase() + " luck: " + String.format("%.2f", mainInstance.getPlayerManager().calcPercent(Material.getMaterial(listened), p, ConfigManager.get())) + "%");
         }
 
-        cfg.set("LastStats." + p.getName() + "." + PlayerManager.getCurrentTime(), listenedBlocks);
-        mainInstance.saveConfig();
-
+        logs.set("LastStats." + p.getName() + "." + PlayerManager.getCurrentTime(), listenedBlocks);
+        PlayerLogs.save();
 
         // Suppression du joueur de data.yml
         data.set("Players." + p.getUniqueId().toString(), null);

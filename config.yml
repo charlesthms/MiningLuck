@@ -1,0 +1,5 @@
+
+freeze-settings:
+  allow-block-break: false
+  allow-damage: false
+  allow-command: false

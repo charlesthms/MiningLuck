@@ -3,7 +3,9 @@ package fr.hypnos.miningluck.commands;
 
 import fr.hypnos.miningluck.Main;
 import fr.hypnos.miningluck.utils.ConfigManager;
+import fr.hypnos.miningluck.utils.Freeze;
 import fr.hypnos.miningluck.utils.GUIManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -16,12 +18,14 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CommandsManager implements CommandExecutor, TabCompleter {
 
     private final Main mainInstance;
     private GUIManager guiManager;
+
 
     public CommandsManager(Main main) {
         this.mainInstance = main;
@@ -78,9 +82,23 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
                 for (String value : list) {
                     sender.sendMessage(value);
                 }
-            } else if (args[0].equalsIgnoreCase("resetPlayerData")){
+            } else if (args[0].equalsIgnoreCase("resetPlayerData")) {
                 ConfigManager.get().set("Players", null);
                 ConfigManager.save();
+
+            } else if (args[0].equalsIgnoreCase("freeze") && args.length == 2) {
+                if (Bukkit.getServer().getPlayer(args[1]) != null) {
+                    // Si le joueur est bien connecté, on l'ajoute à la liste
+                    Player target = Bukkit.getServer().getPlayer(args[1]);
+                    Freeze.getFrozenPlayers().add(target.getUniqueId());
+                }
+            } else if (args[0].equalsIgnoreCase("unfreeze") && args.length == 2) {
+                if (Bukkit.getServer().getPlayer(args[1]) != null) {
+                    if ((Freeze.getFrozenPlayers()).contains(Bukkit.getServer().getPlayer(args[1]).getUniqueId())) {
+                        Player target = Bukkit.getServer().getPlayer(args[1]);
+                        Freeze.getFrozenPlayers().remove(target.getUniqueId());
+                    }
+                }
             }
         }
         return false;
@@ -97,6 +115,8 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
             subArgs.add("unlisten");
             subArgs.add("list");
             subArgs.add("resetPlayerData");
+            subArgs.add("freeze");
+            subArgs.add("unfreeze");
         }
         if (args.length == 2) {
             subArgs.addAll(Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).collect(Collectors.toList()));
@@ -104,6 +124,16 @@ public class CommandsManager implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("unlisten")) {
             FileConfiguration cfg = mainInstance.getConfig();
             return cfg.getStringList("listened-blocks");
+        }
+        if ((args[0].equalsIgnoreCase("freeze"))) {
+            return null;
+        }
+        if (args[0].equalsIgnoreCase("unfreeze")){
+            List<String> frozenPlayers = new ArrayList<>();
+            for (UUID uuid : Freeze.getFrozenPlayers()){
+                frozenPlayers.add(Bukkit.getServer().getPlayer(uuid).getName());
+            }
+            return frozenPlayers;
         }
 
         return subArgs;

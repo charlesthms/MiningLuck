@@ -13,5 +13,10 @@ public class PlayerQuit implements Listener {
         this.mainInstance = main;
     }
 
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e){
+        mainInstance.getPlayerManager().onQuitManager(e.getPlayer());
+    }
+
 
 }

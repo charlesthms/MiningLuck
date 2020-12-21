@@ -2,7 +2,6 @@ package fr.hypnos.miningluck.utils;
 
 
 import fr.hypnos.miningluck.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -69,7 +68,6 @@ public class ConfigManager {
 
         // Ajout des valeures initiales
         cfg.addDefault("listened-blocks", defaultBlocks);
-        cfg.options().copyDefaults(true);
 
         // Mise en place du header
         cfg.options().header("\n" +
@@ -85,6 +83,7 @@ public class ConfigManager {
         cfg.options().copyHeader(true);
 
         // Sauvegarde de la config
+        cfg.options().copyDefaults(true);
         main.saveConfig();
     }
 
