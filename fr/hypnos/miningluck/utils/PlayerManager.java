@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PlayerManager {
@@ -58,10 +60,33 @@ public class PlayerManager {
         data = ConfigManager.get();
 
         if (m.name().equals("ANCIENT_DEBRIS")) {
-            return (double) data.getDouble("Players." + p.getUniqueId().toString() + "." + m.name()) / data.getDouble("Players." + p.getUniqueId().toString() + ".Nether-Blocks") * 100;
+            return data.getDouble("Players." + p.getUniqueId().toString() + "." + m.name()) / data.getDouble("Players." + p.getUniqueId().toString() + ".Nether-Blocks") * 100;
         } else {
-            return (double) data.getDouble("Players." + p.getUniqueId().toString() + "." + m.name()) / data.getDouble("Players." + p.getUniqueId().toString() + ".Overworld-Blocks") * 100;
+            return data.getDouble("Players." + p.getUniqueId().toString() + "." + m.name()) / data.getDouble("Players." + p.getUniqueId().toString() + ".Overworld-Blocks") * 100;
         }
+    }
+
+    public void onQuitManager(Player p) {
+        FileConfiguration cfg = mainInstance.getConfig();
+        FileConfiguration data = ConfigManager.get();
+        List<String> listenedBlocks = new ArrayList<>();
+
+        for (String listened : cfg.getStringList("listened-blocks")) {
+                listenedBlocks.add(listened.toLowerCase() + " luck: " + String.format("%.2f", mainInstance.getPlayerManager().calcPercent(Material.getMaterial(listened), p, ConfigManager.get())) + "%");
+        }
+
+        cfg.set("LastStats." + p.getName() + "." + PlayerManager.getCurrentTime(), listenedBlocks);
+        mainInstance.saveConfig();
+
+
+        // Suppression du joueur de data.yml
+        data.set("Players." + p.getUniqueId().toString(), null);
+        ConfigManager.save();
+    }
+
+    public static String getCurrentTime() {
+        Format f = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        return f.format(new Date());
     }
 
     private void fillTypeBlocks() {
