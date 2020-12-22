@@ -2,7 +2,7 @@ package fr.hypnos.miningluck.events;
 
 
 import fr.hypnos.miningluck.Main;
-import fr.hypnos.miningluck.utils.Freeze;
+import fr.hypnos.miningluck.commands.subcommands.Freeze;
 import fr.hypnos.miningluck.utils.PlayerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

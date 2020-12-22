@@ -7,3 +7,8 @@ commands:
   miningluck:
     description: Plugin main command
     aliases: [ml]
+
+permissions:
+  miningluck.admin:
+    description: Allow all admin commands
+    default: op
