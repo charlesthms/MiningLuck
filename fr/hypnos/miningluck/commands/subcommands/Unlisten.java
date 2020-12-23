@@ -50,7 +50,7 @@ public class Unlisten extends SubCommand {
                     cfg.set("listened-blocks", updated);
                     main.saveConfig();
 
-                    ConfigManager.get().set("Players." + player.getUniqueId().toString() + "." + args[1].toUpperCase(), null);
+                    ConfigManager.getData().set("Players." + player.getUniqueId().toString() + "." + args[1].toUpperCase(), null);
                     ConfigManager.save();
 
                     sender.sendMessage(Messages.PREFIX.getMessage() + ChatColor.GREEN + args[1].toUpperCase() + " retiré des blocks écoutés");

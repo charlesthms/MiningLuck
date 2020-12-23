@@ -26,7 +26,7 @@ public class PlayerManager {
 
     public void addValue(Material m, Player p) {
 
-        FileConfiguration data = ConfigManager.get();
+        FileConfiguration data = ConfigManager.getData();
         FileConfiguration cfg = mainInstance.getConfig();
         listenedBlocks = cfg.getStringList("listened-blocks");
 
@@ -59,7 +59,7 @@ public class PlayerManager {
     }
 
     public Double calcPercent(Material m, Player p, FileConfiguration data) {
-        data = ConfigManager.get();
+        data = ConfigManager.getData();
 
         if (m.name().equals("ANCIENT_DEBRIS")) {
             return data.getDouble("Players." + p.getUniqueId().toString() + "." + m.name()) / data.getDouble("Players." + p.getUniqueId().toString() + ".Nether-Blocks") * 100;
@@ -69,14 +69,14 @@ public class PlayerManager {
     }
 
     public void onQuitManager(Player p) {
-        FileConfiguration data = ConfigManager.get();
+        FileConfiguration data = ConfigManager.getData();
         FileConfiguration logs = PlayerLogs.getLogsConfig();
         FileConfiguration cfg = mainInstance.getConfig();
 
         List<String> listenedBlocks = new ArrayList<>();
 
         for (String listened : cfg.getStringList("listened-blocks")) {
-                listenedBlocks.add(listened.toLowerCase() + " luck: " + String.format("%.2f", mainInstance.getPlayerManager().calcPercent(Material.getMaterial(listened), p, ConfigManager.get())) + "%");
+                listenedBlocks.add(listened.toLowerCase() + " luck: " + String.format("%.2f", mainInstance.getPlayerManager().calcPercent(Material.getMaterial(listened), p, ConfigManager.getData())) + "%");
         }
 
         logs.set("LastStats." + p.getName() + "." + PlayerManager.getCurrentTime(), listenedBlocks);

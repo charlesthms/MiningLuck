@@ -42,7 +42,7 @@ public class GUIManager {
             FileConfiguration cfg = mainInstance.getConfig();
 
             for (String listened : cfg.getStringList("listened-blocks")) {
-                lore.add(ChatColor.AQUA + listened.toLowerCase() + " luck: " + String.format("%.2f", mainInstance.getPlayerManager().calcPercent(Material.getMaterial(listened), p, ConfigManager.get())) + "%");
+                lore.add(ChatColor.AQUA + listened.toLowerCase() + " luck: " + String.format("%.2f", mainInstance.getPlayerManager().calcPercent(Material.getMaterial(listened), p, ConfigManager.getData())) + "%");
             }
 
 

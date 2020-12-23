@@ -10,11 +10,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class FreezeEvent implements Listener {
+public class FreezeEvents implements Listener {
 
     private Main main;
 
-    public FreezeEvent(Main main){
+    public FreezeEvents(Main main){
         this.main = main;
     }
 
@@ -27,7 +27,7 @@ public class FreezeEvent implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e){
-        if (!main.getConfig().getBoolean("allow-block-place")){
+        if (!main.getConfig().getBoolean("freeze-settings.allow-block-place")){
             if (Freeze.getFrozenPlayers().contains(e.getPlayer().getUniqueId())){
                 e.setCancelled(true);
             }

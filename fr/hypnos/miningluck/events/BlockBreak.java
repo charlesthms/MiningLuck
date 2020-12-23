@@ -20,8 +20,8 @@ public class BlockBreak implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
-        if (!main.getConfig().getBoolean("allow-block-break")) {
-            if (Freeze.getFrozenPlayers().contains(e.getPlayer())) {
+        if (!main.getConfig().getBoolean("freeze-settings.allow-block-break")) {
+            if (Freeze.getFrozenPlayers().contains(e.getPlayer().getUniqueId())) {
                 e.setCancelled(true);
             }
         }

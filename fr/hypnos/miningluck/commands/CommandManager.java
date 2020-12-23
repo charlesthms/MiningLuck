@@ -3,8 +3,7 @@ package fr.hypnos.miningluck.commands;
 
 import fr.hypnos.miningluck.Main;
 import fr.hypnos.miningluck.commands.subcommands.*;
-import fr.hypnos.miningluck.utils.Messages;
-import org.bukkit.ChatColor;
+import fr.hypnos.miningluck.utils.PlayerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,13 +14,15 @@ import java.util.ArrayList;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
 
-    private ArrayList<SubCommand> subCommands = new ArrayList<>();
+    private static ArrayList<SubCommand> subCommands = new ArrayList<>();
     private ArrayList<String> subArgs = new ArrayList<>();
 
     private final Main plugin;
+    private PlayerManager playerManager;
 
-    public CommandManager(Main mainInstance) {
+    public CommandManager(Main mainInstance, PlayerManager playerManager) {
         this.plugin = mainInstance;
+        this.playerManager = playerManager;
         subCommands.add(new GUI(plugin));
         subCommands.add(new Listen(plugin));
         subCommands.add(new Unlisten(plugin));
@@ -29,6 +30,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         subCommands.add(new Unfreeze());
         subCommands.add(new ListListened(plugin));
         subCommands.add(new Reload(plugin));
+        subCommands.add(new Check(mainInstance));
+        subCommands.add(new Help());
     }
 
     @Override
@@ -43,13 +46,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     }
                 }
             } else {
-                sender.sendMessage(ChatColor.GOLD + "---------- " + Messages.PREFIX.getMessage() + "----------");
-
-                // Display all the commands syntax + description
-                for (SubCommand subCommand : subCommands) {
-                    sender.sendMessage(ChatColor.AQUA + subCommand.getSyntax() + " - " + subCommand.getDescription());
-                }
-                sender.sendMessage("-----------------------------");
+                subCommands.get(subCommands.size() - 1).runCommand(sender, args);
             }
         }
         return true;
@@ -75,6 +72,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
         return null;
+    }
+
+    public static ArrayList<SubCommand> getSubCommands() {
+        return subCommands;
     }
 }
 

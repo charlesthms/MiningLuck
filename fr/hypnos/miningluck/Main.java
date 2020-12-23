@@ -4,7 +4,7 @@ package fr.hypnos.miningluck;
 import fr.hypnos.miningluck.commands.CommandManager;
 import fr.hypnos.miningluck.events.BlockBreak;
 import fr.hypnos.miningluck.events.ClickEvent;
-import fr.hypnos.miningluck.events.FreezeEvent;
+import fr.hypnos.miningluck.events.FreezeEvents;
 import fr.hypnos.miningluck.events.PlayerQuit;
 import fr.hypnos.miningluck.utils.ConfigManager;
 import fr.hypnos.miningluck.utils.PlayerLogs;
@@ -20,12 +20,12 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        getCommand("miningluck").setExecutor(new CommandManager(this));
+        getCommand("miningluck").setExecutor(new CommandManager(this, playerManager));
 
         getServer().getPluginManager().registerEvents(new ClickEvent(), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(playerManager, this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(this), this);
-        getServer().getPluginManager().registerEvents(new FreezeEvent(this), this);
+        getServer().getPluginManager().registerEvents(new FreezeEvents(this), this);
 
         playerLogs.logsInit();
 

@@ -13,8 +13,10 @@ import java.util.List;
 
 public class ConfigManager {
 
-    private static FileConfiguration customFile;
-    private static File file;
+    private static FileConfiguration data;
+    private static FileConfiguration lang;
+    private static File dataFile;
+    private static File langFile;
 
     private Main main;
 
@@ -31,32 +33,32 @@ public class ConfigManager {
             folder.mkdir();
         }
 
-        file = new File(String.valueOf(main.getDataFolder().toPath().resolve("Local")), "data.yml");
+        dataFile = new File(String.valueOf(main.getDataFolder().toPath().resolve("Local")), "data.yml");
 
-        if (!file.exists()) {
+        if (!dataFile.exists()) {
             try {
-                file.createNewFile();
+                dataFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        customFile = YamlConfiguration.loadConfiguration(file);
+        data = YamlConfiguration.loadConfiguration(dataFile);
     }
 
-    public static FileConfiguration get(){
-        return customFile;
+    public static FileConfiguration getData(){
+        return data;
     }
 
     public static void save(){
         try {
-            customFile.save(file);
+            data.save(dataFile);
         } catch (IOException e){
             e.printStackTrace();
         }
     }
 
     public static void reload() {
-        customFile = YamlConfiguration.loadConfiguration(file);
+        data = YamlConfiguration.loadConfiguration(dataFile);
     }
 
     // Regular config
